@@ -15,7 +15,7 @@ interface AssignmentStore {
   updateAssignment: (assignment: Assignment) => void
 }
 
-const useAssignmentStore = create<AssignmentStore>((set, get) => ({
+const useAssignmentStore = create<AssignmentStore>((set) => ({
   assignments: [],
   current: null,
   loading: false,
