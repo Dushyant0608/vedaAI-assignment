@@ -1,8 +1,7 @@
-import { GoogleGenerativeAI } from '@google/generative-ai'
-import { GEMINI_API_KEY } from '../config/env'
+import Groq from 'groq-sdk'
+import { GROQ_API_KEY } from '../config/env'
 
-const genAI = new GoogleGenerativeAI(GEMINI_API_KEY)
-const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' })
+const groq = new Groq({ apiKey: GROQ_API_KEY })
 
 interface QuestionType {
   type: string
@@ -119,9 +118,15 @@ const parseResponse = (text: string): GeneratedOutput => {
 export const generateQuestionPaper = async (input: GenerateInput): Promise<GeneratedOutput> => {
   const prompt = buildPrompt(input)
 
-  const result = await model.generateContent(prompt)
-  const response = result.response
-  const text = response.text()
+  const response = await groq.chat.completions.create({
+    model: 'llama-3.3-70b-versatile',
+    messages: [{ role: 'user', content: prompt }],
+    temperature: 0.7,
+    max_tokens: 4096,
+  })
+
+  const text = response.choices[0]?.message?.content
+  if (!text) throw new Error('Empty response from Groq')
 
   return parseResponse(text)
 }

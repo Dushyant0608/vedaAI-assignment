@@ -2,7 +2,7 @@ import { Worker, Job } from 'bullmq'
 import { UPSTASH_REDIS_URL } from '../config/env'
 import redis from '../config/redis'
 import Assignment from '../models/assignment.model'
-import { generateQuestionPaper } from '../services/gemini.service'
+import { generateQuestionPaper } from '../services/groq.service'
 import { getIO } from '../socket'
 
 const emitStatus = (assignmentId: string, status: string, data?: any) => {
